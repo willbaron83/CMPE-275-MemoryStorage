@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
-from storage import MemoryManager
-from pprint import pprint as pp
-import pika
-
+from libs.storage import MemoryManager
 
 FULL_MEMORY = 2
 MEM_TABLE_CORRUPTED = 3
