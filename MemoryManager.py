@@ -36,7 +36,7 @@ class MemoryManager:
 
     def get_data(self, memory_id):
         '''
-        :param memory_id: 
+        :param memory_id:
         :return:
         '''
         #TODO

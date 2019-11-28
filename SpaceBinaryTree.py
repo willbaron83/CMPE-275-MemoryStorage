@@ -7,7 +7,8 @@ class SpaceBinaryTree:
     Atrributes
     '''
 
-    head = ""
+    head = None
+
 
 
     '''
@@ -17,5 +18,20 @@ class SpaceBinaryTree:
     # Constructor
     def __init__(self):
         # define the attributes
-        # TODO
+        head = TreeNode(node_left=None, node_right=None, size=None, free_pages=[])
+
+    def set_empty_space(self, size, slots):
+        if self.head.size == None:
+            self.head.set_size(size)
+            self.head.set_free_pages(slots)
+
+        elif size == self.head.size:
+            self.head.set_free_pages(slots)
+
+        else:
+
+
+
+
+    def get_available_node(self, size):
         pass
