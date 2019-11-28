@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
 
-
 class TreeNode:
     node_left = None
     node_right= None

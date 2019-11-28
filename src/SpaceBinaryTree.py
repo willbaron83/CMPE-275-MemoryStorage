@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
+from src.TreeNode import TreeNode
 
 class SpaceBinaryTree:
     '''
@@ -28,8 +29,7 @@ class SpaceBinaryTree:
             self.head.set_free_pages(slots)
 
         else:
-
-
+            pass
 
 
     def get_available_node(self, size):
