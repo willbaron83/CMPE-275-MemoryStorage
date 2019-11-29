@@ -7,10 +7,10 @@ class TreeNode:
     size = 0
     free_pages = []
 
-    def __init__(self, node_left, node_right, size, free_pages):
+    def __init__(self, node_left=None, node_right=None, size=0, free_pages=[]):
         self.node_left = node_left
         self.node_right = node_right
-        self.size - size
+        self.size = size
         self.free_pages = free_pages
 
     def insert_left_node(self, node):
@@ -34,6 +34,19 @@ class TreeNode:
     def get_size(self):
         return self.size;
 
-    def get_free_pages(self):
+    def get_all_free_pages(self):
         return self.free_pages
+
+    def get_free_pages(self):
+        if self.is_node_empty():
+            return []
+        else:
+            ret_val = self.free_pages.pop[0]
+            return ret_val
+
+    def is_node_empty(self):
+        if self.free_pages == []:
+            return True
+        else:
+            return False
 

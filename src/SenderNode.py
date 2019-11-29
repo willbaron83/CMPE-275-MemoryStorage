@@ -33,5 +33,5 @@ if __name__ == '__main__':
     sendNode = SenderNode('localhost:5555')
 
     # pick the file to se send to the receiving node
-    file_path = 'my_file_path.txt'
+    file_path = 'IMG_0610.jpg'
     sendNode.upload(file_path, CHUNK_SIZE)

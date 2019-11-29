@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
 import math
+from src.SpaceBinaryTree import SpaceBinaryTree
 
 from src.Page import Page
 
@@ -16,6 +17,7 @@ class MemoryManager:
     number_of_pages = 0
     list_of_pages_used = []
     fragmentation_threshold = 0
+    pages_free = None
 
     '''
     Methods
@@ -28,6 +30,7 @@ class MemoryManager:
 
         self.number_of_pages = math.floor(self.total_memory_size / self.page_size)
         self.page_list = [Page(self.page_size)] * self.number_of_pages
+        self.pages_free = SpaceBinaryTree(self.total_memory_size, self.number_of_pages)
         print("Number of pages in memory", len(self.page_list))
 
 

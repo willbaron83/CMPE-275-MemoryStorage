@@ -6,21 +6,20 @@ from concurrent import futures
 import grpc
 import time
 import math
-
 import chunk_pb2, chunk_pb2_grpc
-
 from src.MemoryManager import MemoryManager
 
 
 class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
     memory_manager = None
+    num_of_chunks = None
 
     def __init__(self, memory_node_bytes, page_memory_size_bytes):
         self.memory_manager = MemoryManager(memory_node_bytes, page_memory_size_bytes)
 
         def save_chunks_to_memory(chunks, hash_id):
-            num_of_chunks = 4303  # figure out how to determine the number of chunks
-            self.memory_manager.put_data(hash_id, chunks, num_of_chunks)
+            self.num_of_chunks = 4303  # figure out how to determine the number of chunks
+            self.memory_manager.put_data(hash_id, chunks, self.num_of_chunks)
             return True
 
         class Servicer(chunk_pb2_grpc.FileServerServicer):
