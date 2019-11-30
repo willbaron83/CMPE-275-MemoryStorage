@@ -37,8 +37,8 @@ class SpaceBinaryTree:
                                                        size=num_of_slots,
                                                        free_pages=[[free_pages]])
 
-    else:
-    print("Index Error, the node has no list remaining")
+    # else:
+    # print("Index Error, the node has no list remaining")
 
 
 

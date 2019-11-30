@@ -17,15 +17,30 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
     def __init__(self, memory_node_bytes, page_memory_size_bytes):
         self.memory_manager = MemoryManager(memory_node_bytes, page_memory_size_bytes)
 
-        def save_chunks_to_memory(chunks, hash_id):
-            self.num_of_chunks = 4303  # figure out how to determine the number of chunks
-            self.memory_manager.put_data(hash_id, chunks, self.num_of_chunks)
+        def save_chunks_to_memory(chunks, hash_id, chunk_size, data_size):
+            self.memory_manager.put_data(chunks, hash_id, chunk_size, data_size)
             return True
 
         class Servicer(chunk_pb2_grpc.FileServerServicer):
 
             def upload(self, request_iterator, context):
-                success = save_chunks_to_memory(request_iterator, "none")
+                hash_id = ""
+                chunk_size = 0
+                data_size = 0
+
+                for key, value in context.invocation_metadata():
+                    if key == "key-hash-id":
+                        hash_id = value
+                    elif key == "key-chunk-size":
+                        chunk_size = int(value)
+                    elif key == "key-data-size":
+                        data_size = int(value)
+
+                assert hash_id != ""
+                assert chunk_size != 0
+                assert data_size != 0
+
+                success = save_chunks_to_memory(request_iterator, hash_id, chunk_size, data_size)
                 return chunk_pb2.Reply(success=success)
 
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
@@ -46,5 +61,5 @@ if __name__ == '__main__':
     total_memory_node_bytes = 1024 * 1024 * 1024  # start with 1 GB
     total_page_memory_size_bytes = 1024  # start with 1 KB
     receiver_node = ReceiverNode(total_memory_node_bytes, total_page_memory_size_bytes)
-    print("Node READY")
+    print("Node is READY")
     receiver_node.start(5555)
