@@ -5,10 +5,10 @@
 ```
 ### run receiver node:
 ```
-./src/ReceiverNode.py
+python3 ./src/ReceiverNode.py
 ```
 
 ### run sender node:
 ```
-./src/SenderNod.py
+python3 ./src/SenderNode.py
 ```

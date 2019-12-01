@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x17\n\x07Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32*\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32L\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x62\x06proto3')
 )
 
 
@@ -65,7 +65,7 @@ _REQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='Request.name', index=0,
+      name='hash_id', full_name='Request.hash_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -84,7 +84,7 @@ _REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=40,
-  serialized_end=63,
+  serialized_end=66,
 )
 
 
@@ -114,8 +114,8 @@ _REPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=65,
-  serialized_end=89,
+  serialized_start=68,
+  serialized_end=92,
 )
 
 DESCRIPTOR.message_types_by_name['Chunk'] = _CHUNK
@@ -152,8 +152,8 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=91,
-  serialized_end=133,
+  serialized_start=94,
+  serialized_end=170,
   methods=[
   _descriptor.MethodDescriptor(
     name='upload',
@@ -162,6 +162,15 @@ _FILESERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_CHUNK,
     output_type=_REPLY,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='download',
+    full_name='FileServer.download',
+    index=1,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_CHUNK,
     serialized_options=None,
   ),
 ])

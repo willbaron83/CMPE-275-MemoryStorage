@@ -19,6 +19,11 @@ class FileServerStub(object):
         request_serializer=chunk__pb2.Chunk.SerializeToString,
         response_deserializer=chunk__pb2.Reply.FromString,
         )
+    self.download = channel.unary_stream(
+        '/FileServer/download',
+        request_serializer=chunk__pb2.Request.SerializeToString,
+        response_deserializer=chunk__pb2.Chunk.FromString,
+        )
 
 
 class FileServerServicer(object):
@@ -32,6 +37,13 @@ class FileServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def download(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_FileServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -39,6 +51,11 @@ def add_FileServerServicer_to_server(servicer, server):
           servicer.upload,
           request_deserializer=chunk__pb2.Chunk.FromString,
           response_serializer=chunk__pb2.Reply.SerializeToString,
+      ),
+      'download': grpc.unary_stream_rpc_method_handler(
+          servicer.download,
+          request_deserializer=chunk__pb2.Request.FromString,
+          response_serializer=chunk__pb2.Chunk.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

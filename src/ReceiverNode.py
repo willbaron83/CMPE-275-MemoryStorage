@@ -1,5 +1,5 @@
 import sys
-sys.path.append('~/school/cmpe-275/CMPE-275-MemoryStorage/')
+sys.path.append('./')
 
 from concurrent import futures
 
@@ -20,6 +20,11 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
         def save_chunks_to_memory(chunks, hash_id, chunk_size, data_size):
             self.memory_manager.put_data(chunks, hash_id, chunk_size, data_size)
             return True
+
+        def get_chunks_from_memory(hash_id):
+            chunks = self.memory_manager.get_data(hash_id)
+            for c in chunks:
+                yield chunk_pb2.Chunk(buffer=c)
 
         class Servicer(chunk_pb2_grpc.FileServerServicer):
 
@@ -42,6 +47,9 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
 
                 success = save_chunks_to_memory(request_iterator, hash_id, chunk_size, data_size)
                 return chunk_pb2.Reply(success=success)
+
+            def download(self, request, context):
+                return get_chunks_from_memory(request.hash_id)
 
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
         chunk_pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)

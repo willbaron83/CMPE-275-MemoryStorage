@@ -26,7 +26,7 @@ class Page:
         self.data = data
 
     def get_data(self):
-        return self.data
+        return self.data.buffer
 
 
 

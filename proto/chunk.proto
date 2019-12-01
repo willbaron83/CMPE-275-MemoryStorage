@@ -2,6 +2,7 @@ syntax = "proto3";
 
 service FileServer {
   rpc upload(stream Chunk) returns (Reply) {}
+  rpc download(Request) returns (stream Chunk) {}
 }
 
 message Chunk {
@@ -9,7 +10,7 @@ message Chunk {
 }
 
 message Request {
-  string name = 1;
+  string hash_id = 1;
 }
 
 message Reply {

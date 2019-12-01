@@ -19,6 +19,12 @@ def get_file_chunks(filename, chunk_size):
             yield chunk_pb2.Chunk(buffer=chunk)
 
 
+def save_chunks_to_file(filename, chunks):
+    with open(filename, 'wb') as f:
+        for chunk in chunks:
+            f.write(chunk.buffer)
+
+
 def generate_hash_id(app_name, file_name):
     name_path = app_name+file_name
     hash_object = hashlib.sha1(name_path.encode())
@@ -48,14 +54,28 @@ class SenderNode:
         else:
             print("Failed saved the data with hash_id", hash_id)
 
+    def download(self, app_name, file_name, output_path):
+        hash_id = generate_hash_id(app_name, file_name)
+        response = self.stub.download(chunk_pb2.Request(hash_id=hash_id))
+        save_chunks_to_file(output_path, response)
+        print("Successfully downloaded file with hash_id: ", hash_id)
+
 
 if __name__ == '__main__':
     sendNode = SenderNode('localhost:5555')
 
-    # simulate send request
+    # simulate send and download requests
+
     app_n = "dropbox_app"
-    file_p = './IMG_0610.jpg'
+    file_p = "data/test_in.txt"
+
+    # send (upload) file request
     file_n = os.path.basename(file_p)
     file_size_bytes = os.path.getsize(file_p)
 
     sendNode.upload(app_n, file_n, file_p, file_size_bytes)
+
+    # download file request
+    # to download data pass in the app name and file name to obtain the hash
+    output_path = "data/test_out.txt"
+    sendNode.download(app_n, file_n, output_path)

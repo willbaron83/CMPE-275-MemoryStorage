@@ -31,7 +31,11 @@ class MemoryManager:
         self.page_size = page_size
 
         self.total_number_of_pages = math.floor(self.total_memory_size / self.page_size)
-        self.list_of_all_pages = [Page(self.page_size)] * self.total_number_of_pages
+        # self.list_of_all_pages = [Page(self.page_size)] * self.total_number_of_pages
+
+        for i in range(self.total_number_of_pages):
+            self.list_of_all_pages.append(Page(self.page_size))
+
         self.pages_free = SpaceBinaryTree(self.total_memory_size, self.total_number_of_pages)
         print("Number of pages in memory", len(self.list_of_all_pages))
 
@@ -86,13 +90,21 @@ class MemoryManager:
     def get_memory_available_gb(self):
         return (self.total_number_of_pages - len(self.list_of_pages_used)) * self.page_size
 
-    def get_data(self, memory_id):
+    def get_data(self, hash_id):
         '''
-        :param memory_id: 
+        :param hash_id:
         :return:
         '''
-        # TODO
-        pass
+
+        pages_to_return = []
+
+        data_pages = self.memory_tracker[hash_id]
+        for index in data_pages:
+            pages_to_return.append(self.list_of_all_pages[index].get_data())
+
+        print("Returning: data for %s composed of %s pages." % (hash_id, str(len(pages_to_return))))
+
+        return pages_to_return
 
     def update_data(self, data, memory_id):
         '''
