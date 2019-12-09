@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32L\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\x0cReply_double\x12\r\n\x05\x62ytes\x18\x01 \x01(\x01\"\x0f\n\rEmpty_request2\x8b\x01\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12=\n\x1aget_available_memory_bytes\x12\x0e.Empty_request\x1a\r.Reply_double\"\x00\x62\x06proto3')
 )
 
 
@@ -118,9 +118,66 @@ _REPLY = _descriptor.Descriptor(
   serialized_end=92,
 )
 
+
+_REPLY_DOUBLE = _descriptor.Descriptor(
+  name='Reply_double',
+  full_name='Reply_double',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='bytes', full_name='Reply_double.bytes', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=94,
+  serialized_end=123,
+)
+
+
+_EMPTY_REQUEST = _descriptor.Descriptor(
+  name='Empty_request',
+  full_name='Empty_request',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=125,
+  serialized_end=140,
+)
+
 DESCRIPTOR.message_types_by_name['Chunk'] = _CHUNK
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Reply'] = _REPLY
+DESCRIPTOR.message_types_by_name['Reply_double'] = _REPLY_DOUBLE
+DESCRIPTOR.message_types_by_name['Empty_request'] = _EMPTY_REQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Chunk = _reflection.GeneratedProtocolMessageType('Chunk', (_message.Message,), {
@@ -144,6 +201,20 @@ Reply = _reflection.GeneratedProtocolMessageType('Reply', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Reply)
 
+Reply_double = _reflection.GeneratedProtocolMessageType('Reply_double', (_message.Message,), {
+  'DESCRIPTOR' : _REPLY_DOUBLE,
+  '__module__' : 'chunk_pb2'
+  # @@protoc_insertion_point(class_scope:Reply_double)
+  })
+_sym_db.RegisterMessage(Reply_double)
+
+Empty_request = _reflection.GeneratedProtocolMessageType('Empty_request', (_message.Message,), {
+  'DESCRIPTOR' : _EMPTY_REQUEST,
+  '__module__' : 'chunk_pb2'
+  # @@protoc_insertion_point(class_scope:Empty_request)
+  })
+_sym_db.RegisterMessage(Empty_request)
+
 
 
 _FILESERVER = _descriptor.ServiceDescriptor(
@@ -152,8 +223,8 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=94,
-  serialized_end=170,
+  serialized_start=143,
+  serialized_end=282,
   methods=[
   _descriptor.MethodDescriptor(
     name='upload',
@@ -171,6 +242,15 @@ _FILESERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_REQUEST,
     output_type=_CHUNK,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='get_available_memory_bytes',
+    full_name='FileServer.get_available_memory_bytes',
+    index=2,
+    containing_service=None,
+    input_type=_EMPTY_REQUEST,
+    output_type=_REPLY_DOUBLE,
     serialized_options=None,
   ),
 ])

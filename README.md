@@ -41,11 +41,15 @@ Given input file "test_in.txt" and app name "dropbox_app"
 ### Current features:
 1. Upload a file in chunks given a file name and an application name. Chunks size is set to 1024 bytes.
 2. Download a file given a file name and an application name. 
+3. List the memory available in the server in bytes. This will be useful to decide if a file can fit into that server. 
 
 ### Work in Progress features:
 1. Function to list all files stored in a server given an application name
-2. List the memory available in the server in bytes. This will be useful to decide if a file can fit into that server. 
-3. Function to rename a file stored in a server 
+2. Function to rename a file stored in a server 
 
 Note that this example uses files but it can be anything as long as it can be converted to chunks of bytes. 
 See function `get_file_chunks(...)` in the client script
+
+## Group Members
+- Miguel Covarrubias
+- William Baron

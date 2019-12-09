@@ -24,6 +24,11 @@ class FileServerStub(object):
         request_serializer=chunk__pb2.Request.SerializeToString,
         response_deserializer=chunk__pb2.Chunk.FromString,
         )
+    self.get_available_memory_bytes = channel.unary_unary(
+        '/FileServer/get_available_memory_bytes',
+        request_serializer=chunk__pb2.Empty_request.SerializeToString,
+        response_deserializer=chunk__pb2.Reply_double.FromString,
+        )
 
 
 class FileServerServicer(object):
@@ -44,6 +49,13 @@ class FileServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def get_available_memory_bytes(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_FileServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -56,6 +68,11 @@ def add_FileServerServicer_to_server(servicer, server):
           servicer.download,
           request_deserializer=chunk__pb2.Request.FromString,
           response_serializer=chunk__pb2.Chunk.SerializeToString,
+      ),
+      'get_available_memory_bytes': grpc.unary_unary_rpc_method_handler(
+          servicer.get_available_memory_bytes,
+          request_deserializer=chunk__pb2.Empty_request.FromString,
+          response_serializer=chunk__pb2.Reply_double.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

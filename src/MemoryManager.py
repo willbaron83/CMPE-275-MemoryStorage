@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
 import math
+import time
 
 from src.Page import Page
 from src.SpaceBinaryTree import SpaceBinaryTree
@@ -31,13 +32,12 @@ class MemoryManager:
         self.page_size = page_size
 
         self.total_number_of_pages = math.floor(self.total_memory_size / self.page_size)
-        # self.list_of_all_pages = [Page(self.page_size)] * self.total_number_of_pages
 
         for i in range(self.total_number_of_pages):
             self.list_of_all_pages.append(Page(self.page_size))
 
         self.pages_free = SpaceBinaryTree(self.total_memory_size, self.total_number_of_pages)
-        print("Number of pages in memory", len(self.list_of_all_pages))
+        print("Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),  self.page_size))
 
     # def put_data(self, memory_id, data_chunks, num_of_chunks):
     def put_data(self, data_chunks, hash_id, chunk_size, data_size):
@@ -50,15 +50,17 @@ class MemoryManager:
         '''
 
         if hash_id in self.memory_tracker:
-            print("The following hash_id exist and it will be overwritten: ", hash_id)
+            print("The following hash_id exist and it will be overwritten: %s." % hash_id)
             # delete data associated this this hash_id before we save the new one
             self.delete_data(hash_id)
         else:
-            print("Writing new hash_id: ", hash_id)
+            print("Writing new hash_id: %s." % hash_id)
 
         pages_needed = self.get_number_of_pages_needed(chunk_size, data_size)
         # find available blocks of pages to save the data
         target_list_indexes = self.find_n_available_pages(pages_needed)
+
+        start_write_data = time.time()
 
         # save the data in pages
         index_counter = 0
@@ -66,15 +68,16 @@ class MemoryManager:
             self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
             index_counter = index_counter + 1
 
+        total_time_write_data = time.time() - start_write_data
+
         assert index_counter == pages_needed  # make sure we use all the pages we needed
 
         # update the list with used pages
         self.list_of_pages_used.extend(target_list_indexes)
         # update memory dic
         self.memory_tracker[hash_id] = target_list_indexes
-
-        print("Successfully saved the data in %s pages: " % pages_needed)
-        print("Free pages left: ", self.get_number_of_pages_available())
+        print("Successfully saved the data in %s pages. Took %s seconds. Free pages left: %s. Bytes left: %s" %
+              (pages_needed, total_time_write_data,  self.get_number_of_pages_available(), self.get_available_memory_bytes()))
 
     def get_number_of_pages_needed(self, chunk_size, data_size):
         if self.page_size != chunk_size:
@@ -87,7 +90,7 @@ class MemoryManager:
     def get_number_of_pages_available(self):
         return self.total_number_of_pages - len(self.list_of_pages_used)
 
-    def get_memory_available_gb(self):
+    def get_available_memory_bytes(self):
         return (self.total_number_of_pages - len(self.list_of_pages_used)) * self.page_size
 
     def get_data(self, hash_id):
@@ -117,6 +120,9 @@ class MemoryManager:
 
     # this function is very slow, we need to improve it. (This will use a tree)
     def find_n_available_pages(self, n):
+        start = time.time()
+
+        print("Looking for %s available pages... " % n)
         list_indexes_to_used = []
 
         for i in range(0, len(self.list_of_all_pages)):
@@ -125,10 +131,11 @@ class MemoryManager:
                 if len(list_indexes_to_used) == n:
                     break
 
+        total_time = time.time() - start
         if len(list_indexes_to_used) != n:
-            raise Exception("Not enough pages available to save the data")
+            raise Exception("Not enough pages available to save the data. Took %s seconds." % total_time)
         else:
-            print("Enough pages available to save the data")
+            print("Enough pages available to save the data. Took %s seconds." % total_time)
 
         return list_indexes_to_used
 
@@ -143,7 +150,7 @@ class MemoryManager:
         self.list_of_pages_used = [x for x in self.list_of_pages_used if x not in old_pages_list]
 
         # we may also need to delete the data from the actual Pages() in list_of_all_pages
-        print("Successfully deleted hash_id: ", hash_id)
+        print("Successfully deleted hash_id: %s." % hash_id)
 
     def defragment_data(self):
         '''

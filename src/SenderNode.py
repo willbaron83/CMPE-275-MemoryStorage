@@ -60,6 +60,9 @@ class SenderNode:
         save_chunks_to_file(output_path, response)
         print("Successfully downloaded file with hash_id: ", hash_id)
 
+    def get_node_available_memory_bytes(self):
+        return self.stub.get_available_memory_bytes(chunk_pb2.Empty_request()).bytes
+
 
 if __name__ == '__main__':
     sendNode = SenderNode('localhost:5555')
@@ -74,6 +77,7 @@ if __name__ == '__main__':
     file_size_bytes = os.path.getsize(file_p)
 
     sendNode.upload(app_n, file_n, file_p, file_size_bytes)
+    print("Size available in bytes", sendNode.get_node_available_memory_bytes())
 
     # download file request
     # to download data pass in the app name and file name to obtain the hash

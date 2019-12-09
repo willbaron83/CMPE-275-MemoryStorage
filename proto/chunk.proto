@@ -3,6 +3,7 @@ syntax = "proto3";
 service FileServer {
   rpc upload(stream Chunk) returns (Reply) {}
   rpc download(Request) returns (stream Chunk) {}
+  rpc get_available_memory_bytes(Empty_request) returns (Reply_double) {}
 }
 
 message Chunk {
@@ -16,3 +17,10 @@ message Request {
 message Reply {
   bool success = 1;
 }
+
+message Reply_double {
+  double bytes = 1;
+}
+
+message Empty_request {}
+
