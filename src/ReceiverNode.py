@@ -33,7 +33,6 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
         def get_stored_hashes_list_iterator():
             list_of_hashes = self.memory_manager.get_stored_hashes_list()
             for hash_ in list_of_hashes:
-                print("Senfing: ", hash_)
                 yield chunk_pb2.Reply_string(hash_id=hash_)
 
         class Servicer(chunk_pb2_grpc.FileServerServicer):
