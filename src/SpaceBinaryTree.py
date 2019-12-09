@@ -44,8 +44,18 @@ class SpaceBinaryTree:
 
     def get_available_space(self, number_of_chunks):
         #number of spaces is available in sorted dict
+        '''
+        :param number_of_chunks:
+        :return:
+        '''
+
+        '''
+        The data structure can find the exact number of pages requested
+        if it does find a spot that fits, it can allocate that space
+        '''
         if self.sorted_dict.get(number_of_chunks):
-            temp_list = self.sorted_dict.get(number_of_chunks).free_pages.pop(0)
+            ret_list = self.sorted_dict.get(number_of_chunks).free_pages.pop(0)
+            return ret_list
         else:
             '''
             Either the chunck is largest or smallest than the chunks available.
@@ -70,28 +80,45 @@ class SpaceBinaryTree:
                     # Then we store the remaining list in an existing key
                     rem_list = temp_list[number_of_chunks:]
                     self.set_empty_space(len(rem_list), rem_list)
+                    return ret_list
             else:
+                # Get the smallest space available from sorted dict
+                smallest_chuck = self.sorted_dict.keys()[0]
+                # Take smallest pieces and get as many until enough chunks
+                # meet the chunks needed
+                temp_node = self.sorted_dict.pop(smallest_chuck)
                 #number of chunks is larger than largest spot available.
                 enough_pages = False
-                page_list = []
-                free_pages_left = number_of_chunks
+                ret_list = []
+                free_pages_needed = number_of_chunks
+                ret_list = None
                 # We are going to start looking at the smallest set of page lists
                 # and we are going to add as many pages needed for the chunks to fit in
                 while not enough_pages:
-                    avail_pages_list = self.sorted_dict.keys()
-                    if avail_pages_list[0] < free_pages_left:
-                        for lp in self.sorted_dict.get(avail_pages_list[0]).get_all_free_pages():
-                                if free_pages_left > len(lp):
-                                    page_list = page_list + lp
-                                    free_pages_left = free_pages_left - len(page_list)
-                                else:
-                                    page_list = page_list + lp[:free_pages_left]
-                                    free_pages_left = free_pages_left - len(page_list)
-                                    self.set_empty_space(len(free_pages_left), free_pages_left)
+                    # The list of pages is smaller than needed at this point
+                    if free_pages_needed[0] > smallest_chuck:
+                    # Cycle through all the pages in the node and try to fill the gap
+                        for lp in self.sorted_dict.get(smallest_chuck).get_all_free_pages():
+                            if free_pages_needed > len(lp):
+                                ret_list = ret_list + lp
+                                free_pages_needed = free_pages_needed - len(ret_list)
 
-                        if free_pages_left > 0:
-                            self.sorted_dict.pop(avail_pages_list[0])
-                            continue
+                            else:
+                                ret_list = ret_list + lp[:free_pages_needed]
+                                free_pages_left = free_pages_needed - len(ret_list)
+                                #if there are any pages left after the split
+                                if free_pages_left > 0:
+                                    self.set_empty_space(len(free_pages_needed), lp[free_pages_needed:])
+
+                                enough_pages = True
+
+                            if enough_pages == True:
+                                self.sorted_dict.pop[0]
+                                return ret_list
+                            else:
+                                self.sorted_dict.pop(0)
+                                continue
+
 
 
 

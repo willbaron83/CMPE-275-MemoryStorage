@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # simulate send and download requests
 
     app_n = "dropbox_app"
-    file_p = "data/test_in.txt"
+    file_p = "/Users/wbaron/Downloads/LLD-icon.hdf5"
 
     # send (upload) file request
     file_n = os.path.basename(file_p)
@@ -75,7 +75,17 @@ if __name__ == '__main__':
 
     sendNode.upload(app_n, file_n, file_p, file_size_bytes)
 
+    app_n = "dropbox_app"
+    file_p = "/Users/wbaron/Downloads/WCB8-12to 9-302019.docx"
+
+    # send (upload) file request
+    file_n = os.path.basename(file_p)
+    file_size_bytes = os.path.getsize(file_p)
+
+    sendNode.upload(app_n, file_n, file_p, file_size_bytes)
+
+
     # download file request
     # to download data pass in the app name and file name to obtain the hash
-    output_path = "data/test_out.txt"
-    sendNode.download(app_n, file_n, output_path)
+    # output_path = "data/test_out.txt"
+    # sendNode.download(app_n, file_n, output_path)

@@ -119,16 +119,17 @@ class MemoryManager:
     def find_n_available_pages(self, n):
         list_indexes_to_used = []
 
-        for i in range(0, len(self.list_of_all_pages)):
-            if i not in self.list_of_pages_used:
-                list_indexes_to_used.append(i)
-                if len(list_indexes_to_used) == n:
-                    break
-
-        if len(list_indexes_to_used) != n:
-            raise Exception("Not enough pages available to save the data")
-        else:
-            print("Enough pages available to save the data")
+        list_indexes_to_used = self.pages_free.get_available_space(n)
+        # for i in range(0, len(self.list_of_all_pages)):
+        #     if i not in self.list_of_pages_used:
+        #         list_indexes_to_used.append(i)
+        #         if len(list_indexes_to_used) == n:
+        #             break
+        #
+        # if len(list_indexes_to_used) != n:
+        #     raise Exception("Not enough pages available to save the data")
+        # else:
+        #     print("Enough pages available to save the data")
 
         return list_indexes_to_used
 
