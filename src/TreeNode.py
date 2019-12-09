@@ -41,7 +41,7 @@ class TreeNode:
         if self.is_node_empty():
             return []
         else:
-            ret_val = self.free_pages.pop[0]
+            ret_val = self.free_pages.pop()[0]
             return ret_val
 
     def is_node_empty(self):
@@ -50,3 +50,13 @@ class TreeNode:
         else:
             return False
 
+    def print_free_pages(self):
+        max_numbers = 5
+        for i, set_of_pages in enumerate(self.free_pages):
+            if isinstance(set_of_pages, list):
+                temp_list = []
+                for j, element in enumerate(set_of_pages):
+                    temp_list.append(element)
+                    if j > max_numbers:
+                        break
+                print("[TreeNode] list {}: {}".format(i, temp_list))

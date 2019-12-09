@@ -37,7 +37,8 @@ class MemoryManager:
             self.list_of_all_pages.append(Page(self.page_size))
 
         self.pages_free = SpaceBinaryTree(self.total_memory_size, self.total_number_of_pages)
-        print("Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),  self.page_size))
+        print("[MemoryManager]Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),
+                                                                                           self.page_size))
 
     # def put_data(self, memory_id, data_chunks, num_of_chunks):
     def put_data(self, data_chunks, hash_id, chunk_size, data_size):
@@ -59,7 +60,8 @@ class MemoryManager:
         pages_needed = self.get_number_of_pages_needed(chunk_size, data_size)
         # find available blocks of pages to save the data
         target_list_indexes = self.find_n_available_pages(pages_needed)
-
+        print("Number of Pages requested = {}".format(pages_needed))
+        print("List of pages that it got = {}, Number of pages received = {}".format(len(target_list_indexes), len(target_list_indexes)))
         start_write_data = time.time()
 
         # save the data in pages
@@ -125,13 +127,15 @@ class MemoryManager:
         print("Looking for %s available pages... " % n)
         list_indexes_to_used = []
 
-        for i in range(0, len(self.list_of_all_pages)):
-            if i not in self.list_of_pages_used:
-                list_indexes_to_used.append(i)
-                if len(list_indexes_to_used) == n:
-                    break
-
+        list_indexes_to_used = self.pages_free.get_available_space(n)
+        # for i in range(0, len(self.list_of_all_pages)):
+        #     if i not in self.list_of_pages_used:
+        #         list_indexes_to_used.append(i)
+        #         if len(list_indexes_to_used) == n:
+        #             break
+        #
         total_time = time.time() - start
+
         if len(list_indexes_to_used) != n:
             raise Exception("Not enough pages available to save the data. Took %s seconds." % total_time)
         else:
