@@ -91,7 +91,7 @@ class MemoryManager:
         return self.total_number_of_pages - len(self.list_of_pages_used)
 
     def get_available_memory_bytes(self):
-        return (self.total_number_of_pages - len(self.list_of_pages_used)) * self.page_size
+        return self.get_number_of_pages_available() * self.page_size
 
     def get_data(self, hash_id):
         '''
@@ -151,6 +151,9 @@ class MemoryManager:
 
         # we may also need to delete the data from the actual Pages() in list_of_all_pages
         print("Successfully deleted hash_id: %s." % hash_id)
+
+    def get_stored_hashes_list(self):
+        return list(self.memory_tracker.keys())
 
     def defragment_data(self):
         '''

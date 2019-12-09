@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\x0cReply_double\x12\r\n\x05\x62ytes\x18\x01 \x01(\x01\"\x0f\n\rEmpty_request2\x8b\x01\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12=\n\x1aget_available_memory_bytes\x12\x0e.Empty_request\x1a\r.Reply_double\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\x0cReply_double\x12\r\n\x05\x62ytes\x18\x01 \x01(\x01\"\x0f\n\rEmpty_request\"\x1f\n\x0cReply_string\x12\x0f\n\x07hash_id\x18\x01 \x01(\t2\xd1\x01\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12=\n\x1aget_available_memory_bytes\x12\x0e.Empty_request\x1a\r.Reply_double\"\x00\x12\x44\n\x1fget_stored_hashes_list_iterator\x12\x0e.Empty_request\x1a\r.Reply_string\"\x00\x30\x01\x62\x06proto3')
 )
 
 
@@ -173,11 +173,43 @@ _EMPTY_REQUEST = _descriptor.Descriptor(
   serialized_end=140,
 )
 
+
+_REPLY_STRING = _descriptor.Descriptor(
+  name='Reply_string',
+  full_name='Reply_string',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='hash_id', full_name='Reply_string.hash_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=142,
+  serialized_end=173,
+)
+
 DESCRIPTOR.message_types_by_name['Chunk'] = _CHUNK
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Reply'] = _REPLY
 DESCRIPTOR.message_types_by_name['Reply_double'] = _REPLY_DOUBLE
 DESCRIPTOR.message_types_by_name['Empty_request'] = _EMPTY_REQUEST
+DESCRIPTOR.message_types_by_name['Reply_string'] = _REPLY_STRING
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Chunk = _reflection.GeneratedProtocolMessageType('Chunk', (_message.Message,), {
@@ -215,6 +247,13 @@ Empty_request = _reflection.GeneratedProtocolMessageType('Empty_request', (_mess
   })
 _sym_db.RegisterMessage(Empty_request)
 
+Reply_string = _reflection.GeneratedProtocolMessageType('Reply_string', (_message.Message,), {
+  'DESCRIPTOR' : _REPLY_STRING,
+  '__module__' : 'chunk_pb2'
+  # @@protoc_insertion_point(class_scope:Reply_string)
+  })
+_sym_db.RegisterMessage(Reply_string)
+
 
 
 _FILESERVER = _descriptor.ServiceDescriptor(
@@ -223,8 +262,8 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=143,
-  serialized_end=282,
+  serialized_start=176,
+  serialized_end=385,
   methods=[
   _descriptor.MethodDescriptor(
     name='upload',
@@ -251,6 +290,15 @@ _FILESERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_EMPTY_REQUEST,
     output_type=_REPLY_DOUBLE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='get_stored_hashes_list_iterator',
+    full_name='FileServer.get_stored_hashes_list_iterator',
+    index=3,
+    containing_service=None,
+    input_type=_EMPTY_REQUEST,
+    output_type=_REPLY_STRING,
     serialized_options=None,
   ),
 ])

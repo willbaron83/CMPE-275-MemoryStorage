@@ -39,13 +39,25 @@ Given input file "test_in.txt" and app name "dropbox_app"
 
 
 ### Current features:
-1. Upload a file in chunks given a file name and an application name. Chunks size is set to 1024 bytes.
+1. Upload a file in chunks given a file name and an application name. Chunks size is set to 1024 bytes.  
+```
+rpc upload(stream Chunk) returns (Reply) {}
+```
 2. Download a file given a file name and an application name. 
+```
+rpc download(Request) returns (stream Chunk) {}
+```
 3. List the memory available in the server in bytes. This will be useful to decide if a file can fit into that server. 
-
+```
+rpc get_available_memory_bytes(Empty_request) returns (Reply_double) {}
+```
+4. Function to list all files stored in a server given an application name
+```
+rpc get_stored_hashes_list_iterator(Empty_request) returns (stream Reply_string) {}
+``` 
+  
 ### Work in Progress features:
-1. Function to list all files stored in a server given an application name
-2. Function to rename a file stored in a server 
+1. Function to rename a file stored in a server 
 
 Note that this example uses files but it can be anything as long as it can be converted to chunks of bytes. 
 See function `get_file_chunks(...)` in the client script

@@ -30,6 +30,12 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
             bytes_ = self.memory_manager.get_available_memory_bytes()
             return chunk_pb2.Reply_double(bytes=bytes_)
 
+        def get_stored_hashes_list_iterator():
+            list_of_hashes = self.memory_manager.get_stored_hashes_list()
+            for hash_ in list_of_hashes:
+                print("Senfing: ", hash_)
+                yield chunk_pb2.Reply_string(hash_id=hash_)
+
         class Servicer(chunk_pb2_grpc.FileServerServicer):
 
             def upload(self, request_iterator, context):
@@ -57,6 +63,9 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
 
             def get_available_memory_bytes(self, request, context):
                 return get_available_memory_bytes()
+
+            def get_stored_hashes_list_iterator(self, request, context):
+                return get_stored_hashes_list_iterator()
 
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
         chunk_pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)

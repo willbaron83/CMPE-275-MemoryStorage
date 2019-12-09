@@ -4,6 +4,7 @@ service FileServer {
   rpc upload(stream Chunk) returns (Reply) {}
   rpc download(Request) returns (stream Chunk) {}
   rpc get_available_memory_bytes(Empty_request) returns (Reply_double) {}
+  rpc get_stored_hashes_list_iterator(Empty_request) returns (stream Reply_string) {}
 }
 
 message Chunk {
@@ -23,4 +24,8 @@ message Reply_double {
 }
 
 message Empty_request {}
+
+message Reply_string {
+  string hash_id = 1;
+}
 

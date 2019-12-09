@@ -7,7 +7,7 @@ import hashlib
 
 import chunk_pb2, chunk_pb2_grpc
 
-CHUNK_SIZE = 1024   # 1MB // the server (receiver node) must also be configured to take the same chunk size
+CHUNK_SIZE = 1024  # 1MB // the server (receiver node) must also be configured to take the same chunk size
 
 
 def get_file_chunks(filename, chunk_size):
@@ -26,7 +26,7 @@ def save_chunks_to_file(filename, chunks):
 
 
 def generate_hash_id(app_name, file_name):
-    name_path = app_name+file_name
+    name_path = app_name + file_name
     hash_object = hashlib.sha1(name_path.encode())
     hex_dig = hash_object.hexdigest()
     return hex_dig
@@ -63,12 +63,16 @@ class SenderNode:
     def get_node_available_memory_bytes(self):
         return self.stub.get_available_memory_bytes(chunk_pb2.Empty_request()).bytes
 
+    def get_node_stored_hashes_list_iterator(self):
+        return self.stub.get_stored_hashes_list_iterator(chunk_pb2.Empty_request())
+
 
 if __name__ == '__main__':
     sendNode = SenderNode('localhost:5555')
 
     # simulate send and download requests
 
+    # save first file
     app_n = "dropbox_app"
     file_p = "data/test_in.txt"
 
@@ -77,7 +81,20 @@ if __name__ == '__main__':
     file_size_bytes = os.path.getsize(file_p)
 
     sendNode.upload(app_n, file_n, file_p, file_size_bytes)
+
+    # save a second file
+    file_p = "data/test_in_2.txt"
+
+    # send (upload) file request
+    file_n = os.path.basename(file_p)
+    file_size_bytes = os.path.getsize(file_p)
+
+    sendNode.upload(app_n, file_n, file_p, file_size_bytes)
+
     print("Size available in bytes", sendNode.get_node_available_memory_bytes())
+    print("Hashes saved: ")
+    for hash_ in sendNode.get_node_stored_hashes_list_iterator():
+        print(hash_.hash_id)
 
     # download file request
     # to download data pass in the app name and file name to obtain the hash
