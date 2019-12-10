@@ -81,7 +81,7 @@ class ReceiverNode(chunk_pb2_grpc.FileServerServicer):
 
 
 if __name__ == '__main__':
-    total_memory_node_bytes = 1024 * 1024 * 1024  # start with 1 GB
+    total_memory_node_bytes = 6 * 1024 * 1024 * 1024  # start with 1 GB
     total_page_memory_size_bytes = 1024   # start with 1 KB
     receiver_node = ReceiverNode(total_memory_node_bytes, total_page_memory_size_bytes)
     print("Node is READY.")

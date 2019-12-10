@@ -37,7 +37,7 @@ class MemoryManager:
             self.list_of_all_pages.append(Page(self.page_size))
 
         self.pages_free = SpaceBinaryTree(self.total_memory_size, self.total_number_of_pages)
-        print("[MemoryManager]Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),
+        print("[MemoryManager] Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),
                                                                                            self.page_size))
 
     # def put_data(self, memory_id, data_chunks, num_of_chunks):
@@ -51,17 +51,17 @@ class MemoryManager:
         '''
 
         if hash_id in self.memory_tracker:
-            print("The following hash_id exist and it will be overwritten: %s." % hash_id)
+            print("[MemoryManager] The following hash_id exist and it will be overwritten: %s." % hash_id)
             # delete data associated this this hash_id before we save the new one
             self.delete_data(hash_id)
         else:
-            print("Writing new hash_id: %s." % hash_id)
+            print("\n[MemoryManager] Writing new data with hash_id: %s." % hash_id)
 
         pages_needed = self.get_number_of_pages_needed(chunk_size, data_size)
         # find available blocks of pages to save the data
         target_list_indexes = self.find_n_available_pages(pages_needed)
-        print("Number of Pages requested = {}".format(pages_needed))
-        print("List of pages that it got = {}, Number of pages received = {}".format(len(target_list_indexes), len(target_list_indexes)))
+        #print("[MemoryManager] Number of Pages requested = {}".format(pages_needed))
+        #print("[MemoryManager] List of pages that it got = {}, Number of pages received = {}".format(len(target_list_indexes), len(target_list_indexes)))
         start_write_data = time.time()
 
         # save the data in pages
@@ -70,7 +70,7 @@ class MemoryManager:
             self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
             index_counter = index_counter + 1
 
-        total_time_write_data = time.time() - start_write_data
+        total_time_write_data = round(time.time() - start_write_data, 6)
 
         assert index_counter == pages_needed  # make sure we use all the pages we needed
 
@@ -78,12 +78,13 @@ class MemoryManager:
         self.list_of_pages_used.extend(target_list_indexes)
         # update memory dic
         self.memory_tracker[hash_id] = target_list_indexes
-        print("Successfully saved the data in %s pages. Took %s seconds. Free pages left: %s. Bytes left: %s" %
-              (pages_needed, total_time_write_data,  self.get_number_of_pages_available(), self.get_available_memory_bytes()))
+        print("[MemoryManager] Successfully saved the data in %s pages. Bytes written: %s. Took %s seconds." %
+              (pages_needed, pages_needed * self.page_size, total_time_write_data))
+        print("[MemoryManager] Free pages left: %s. Bytes left: %s" % (self.get_number_of_pages_available(), self.get_available_memory_bytes()))
 
     def get_number_of_pages_needed(self, chunk_size, data_size):
         if self.page_size != chunk_size:
-            message = "Page set in the server is different than the chunk size specified. Please send the data with " \
+            message = "[MemoryManager] Page set in the server is different than the chunk size specified. Please send the data with " \
                       "the correct chunk from the client side. This will be supported in the future."
             raise Exception(message)
         else:
@@ -104,10 +105,15 @@ class MemoryManager:
         pages_to_return = []
 
         data_pages = self.memory_tracker[hash_id]
+        start_read_data = time.time()
+
         for index in data_pages:
             pages_to_return.append(self.list_of_all_pages[index].get_data())
 
-        print("Returning: data for %s composed of %s pages." % (hash_id, str(len(pages_to_return))))
+        total_time_read_data = round(time.time() - start_read_data, 6)
+
+        print("[MemoryManager] Returning: data for %s composed of %s pages. Took %s sec" %
+              (hash_id, str(len(pages_to_return)), total_time_read_data))
 
         return pages_to_return
 
@@ -124,7 +130,7 @@ class MemoryManager:
     def find_n_available_pages(self, n):
         start = time.time()
 
-        print("Looking for %s available pages... " % n)
+        print("[MemoryManager] Looking for %s available pages... " % n)
         list_indexes_to_used = []
 
         list_indexes_to_used = self.pages_free.get_available_space(n)
@@ -134,12 +140,12 @@ class MemoryManager:
         #         if len(list_indexes_to_used) == n:
         #             break
         #
-        total_time = time.time() - start
+        total_time = round(time.time() - start, 6)
 
         if len(list_indexes_to_used) != n:
-            raise Exception("Not enough pages available to save the data. Took %s seconds." % total_time)
+            raise Exception("[MemoryManager] Not enough pages available to save the data. Took %s seconds." % total_time)
         else:
-            print("Enough pages available to save the data. Took %s seconds." % total_time)
+            print("[MemoryManager] Enough pages available to save the data. Took %s seconds." % total_time)
 
         return list_indexes_to_used
 
@@ -154,7 +160,7 @@ class MemoryManager:
         self.list_of_pages_used = [x for x in self.list_of_pages_used if x not in old_pages_list]
 
         # we may also need to delete the data from the actual Pages() in list_of_all_pages
-        print("Successfully deleted hash_id: %s." % hash_id)
+        print("[MemoryManager] Successfully deleted hash_id: %s." % hash_id)
 
     def get_stored_hashes_list(self):
         return list(self.memory_tracker.keys())

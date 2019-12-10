@@ -4,10 +4,11 @@ from concurrent import futures
 import grpc
 import time
 import hashlib
+import sys
 
 import chunk_pb2, chunk_pb2_grpc
 
-CHUNK_SIZE = 1024  # 1MB // the server (receiver node) must also be configured to take the same chunk size
+CHUNK_SIZE = 1024  # 1KB // the server (receiver node) must also be configured to take the same chunk size
 
 
 def get_file_chunks(filename, chunk_size):
@@ -70,11 +71,20 @@ class SenderNode:
 if __name__ == '__main__':
     sendNode = SenderNode('localhost:5555')
 
-    # simulate send and download requests
+    if len(sys.argv) == 1:
+        print("Please pass in at least one argument")
+        sys.exit()
 
-    # save first file
+    file_p = sys.argv[1]
+
     app_n = "dropbox_app"
-    file_p = "data/test_in.txt"
+    download_file = "false"
+
+    if len(sys.argv) > 2:
+        app_n = sys.argv[2]
+
+    if len(sys.argv) > 3:
+        download_file = sys.argv[3]
 
     # send (upload) file request
     file_n = os.path.basename(file_p)
@@ -82,23 +92,13 @@ if __name__ == '__main__':
 
     sendNode.upload(app_n, file_n, file_p, file_size_bytes)
 
-    # save a second file
-    file_p = "data/test_in_2.txt"
-
-    # send (upload) file request
-    file_n = os.path.basename(file_p)
-    file_size_bytes = os.path.getsize(file_p)
-
-    sendNode.upload(app_n, file_n, file_p, file_size_bytes)
-
-    print("Size available in bytes", sendNode.get_node_available_memory_bytes())
-    print("Hashes saved: ")
+    print("\nSize available in bytes ", sendNode.get_node_available_memory_bytes())
+    print("Hashes saved so far: ")
     for hash_ in sendNode.get_node_stored_hashes_list_iterator():
         print(hash_.hash_id)
 
     # download file request
     # to download data pass in the app name and file name to obtain the hash
-    output_path = "data/test_out.txt"
-    sendNode.download(app_n, file_n, output_path)
-
-
+    if "true" == "true":
+        output_path = "data/test_out.txt"
+        sendNode.download(app_n, file_n, output_path)
