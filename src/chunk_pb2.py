@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\x0cReply_double\x12\r\n\x05\x62ytes\x18\x01 \x01(\x01\"\x0f\n\rEmpty_request\"\x1f\n\x0cReply_string\x12\x0f\n\x07hash_id\x18\x01 \x01(\t2\xd1\x01\n\nFileServer\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12=\n\x1aget_available_memory_bytes\x12\x0e.Empty_request\x1a\r.Reply_double\"\x00\x12\x44\n\x1fget_stored_hashes_list_iterator\x12\x0e.Empty_request\x1a\r.Reply_string\"\x00\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x63hunk.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x1a\n\x07Request\x12\x0f\n\x07hash_id\x18\x01 \x01(\t\"\x18\n\x05Reply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\x0cReply_double\x12\r\n\x05\x62ytes\x18\x01 \x01(\x01\"\x0f\n\rEmpty_request\"\x1f\n\x0cReply_string\x12\x0f\n\x07hash_id\x18\x01 \x01(\t2\xc4\x02\n\nFileServer\x12)\n\x13upload_chunk_stream\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12\'\n\x13upload_single_chunk\x12\x06.Chunk\x1a\x06.Reply\"\x00\x12-\n\x15\x64ownload_chunk_stream\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12=\n\x1aget_available_memory_bytes\x12\x0e.Empty_request\x1a\r.Reply_double\"\x00\x12\x44\n\x1fget_stored_hashes_list_iterator\x12\x0e.Empty_request\x1a\r.Reply_string\"\x00\x30\x01\x12.\n\x18hash_id_exists_in_memory\x12\x08.Request\x1a\x06.Reply\"\x00\x62\x06proto3')
 )
 
 
@@ -263,11 +263,11 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=176,
-  serialized_end=385,
+  serialized_end=500,
   methods=[
   _descriptor.MethodDescriptor(
-    name='upload',
-    full_name='FileServer.upload',
+    name='upload_chunk_stream',
+    full_name='FileServer.upload_chunk_stream',
     index=0,
     containing_service=None,
     input_type=_CHUNK,
@@ -275,9 +275,18 @@ _FILESERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='download',
-    full_name='FileServer.download',
+    name='upload_single_chunk',
+    full_name='FileServer.upload_single_chunk',
     index=1,
+    containing_service=None,
+    input_type=_CHUNK,
+    output_type=_REPLY,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='download_chunk_stream',
+    full_name='FileServer.download_chunk_stream',
+    index=2,
     containing_service=None,
     input_type=_REQUEST,
     output_type=_CHUNK,
@@ -286,7 +295,7 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='get_available_memory_bytes',
     full_name='FileServer.get_available_memory_bytes',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_EMPTY_REQUEST,
     output_type=_REPLY_DOUBLE,
@@ -295,10 +304,19 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='get_stored_hashes_list_iterator',
     full_name='FileServer.get_stored_hashes_list_iterator',
-    index=3,
+    index=4,
     containing_service=None,
     input_type=_EMPTY_REQUEST,
     output_type=_REPLY_STRING,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='hash_id_exists_in_memory',
+    full_name='FileServer.hash_id_exists_in_memory',
+    index=5,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_REPLY,
     serialized_options=None,
   ),
 ])

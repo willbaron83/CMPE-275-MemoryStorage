@@ -41,7 +41,7 @@ class MemoryManager:
                                                                                            self.page_size))
 
     # def put_data(self, memory_id, data_chunks, num_of_chunks):
-    def put_data(self, data_chunks, hash_id, chunk_size, data_size):
+    def put_data(self, data_chunks, hash_id, number_of_chunks, is_single_chunk):
         '''
         :param data_chunks:
         :param hash_id:
@@ -57,7 +57,7 @@ class MemoryManager:
         else:
             print("\n[MemoryManager] Writing new data with hash_id: %s." % hash_id)
 
-        pages_needed = self.get_number_of_pages_needed(chunk_size, data_size)
+        pages_needed = number_of_chunks #self.get_number_of_pages_needed(chunk_size, number_of_chunks)
         # find available blocks of pages to save the data
         target_list_indexes = self.find_n_available_pages(pages_needed)
         #print("[MemoryManager] Number of Pages requested = {}".format(pages_needed))
@@ -66,8 +66,12 @@ class MemoryManager:
 
         # save the data in pages
         index_counter = 0
-        for c in data_chunks:
-            self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
+        if not is_single_chunk:
+            for c in data_chunks:
+                self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
+                index_counter = index_counter + 1
+        else:
+            self.list_of_all_pages[target_list_indexes[index_counter]].put_data(data_chunks)
             index_counter = index_counter + 1
 
         total_time_write_data = round(time.time() - start_write_data, 6)
@@ -81,14 +85,15 @@ class MemoryManager:
         print("[MemoryManager] Successfully saved the data in %s pages. Bytes written: %s. Took %s seconds." %
               (pages_needed, pages_needed * self.page_size, total_time_write_data))
         print("[MemoryManager] Free pages left: %s. Bytes left: %s" % (self.get_number_of_pages_available(), self.get_available_memory_bytes()))
+        return True
 
-    def get_number_of_pages_needed(self, chunk_size, data_size):
-        if self.page_size != chunk_size:
-            message = "[MemoryManager] Page set in the server is different than the chunk size specified. Please send the data with " \
-                      "the correct chunk from the client side. This will be supported in the future."
-            raise Exception(message)
-        else:
-            return math.ceil(data_size / chunk_size)  # taking ceiling to account for last page being partially occupied
+    # def get_number_of_pages_needed(self, chunk_size, data_size):
+    #     if self.page_size != chunk_size:
+    #         message = "[MemoryManager] Page set in the server is different than the chunk size specified. Please send the data with " \
+    #                   "the correct chunk from the client side. This will be supported in the future."
+    #         raise Exception(message)
+    #     else:
+    #         return math.ceil(data_size / chunk_size)  # taking ceiling to account for last page being partially occupied
 
     def get_number_of_pages_available(self):
         return self.total_number_of_pages - len(self.list_of_pages_used)
@@ -164,6 +169,12 @@ class MemoryManager:
 
     def get_stored_hashes_list(self):
         return list(self.memory_tracker.keys())
+
+    def hash_id_exists(self, hash_id):
+        if hash_id in self.memory_tracker:
+            return True
+        else:
+            return False
 
     def defragment_data(self):
         '''

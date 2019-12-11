@@ -14,13 +14,18 @@ class FileServerStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.upload = channel.stream_unary(
-        '/FileServer/upload',
+    self.upload_chunk_stream = channel.stream_unary(
+        '/FileServer/upload_chunk_stream',
         request_serializer=chunk__pb2.Chunk.SerializeToString,
         response_deserializer=chunk__pb2.Reply.FromString,
         )
-    self.download = channel.unary_stream(
-        '/FileServer/download',
+    self.upload_single_chunk = channel.unary_unary(
+        '/FileServer/upload_single_chunk',
+        request_serializer=chunk__pb2.Chunk.SerializeToString,
+        response_deserializer=chunk__pb2.Reply.FromString,
+        )
+    self.download_chunk_stream = channel.unary_stream(
+        '/FileServer/download_chunk_stream',
         request_serializer=chunk__pb2.Request.SerializeToString,
         response_deserializer=chunk__pb2.Chunk.FromString,
         )
@@ -34,20 +39,32 @@ class FileServerStub(object):
         request_serializer=chunk__pb2.Empty_request.SerializeToString,
         response_deserializer=chunk__pb2.Reply_string.FromString,
         )
+    self.hash_id_exists_in_memory = channel.unary_unary(
+        '/FileServer/hash_id_exists_in_memory',
+        request_serializer=chunk__pb2.Request.SerializeToString,
+        response_deserializer=chunk__pb2.Reply.FromString,
+        )
 
 
 class FileServerServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def upload(self, request_iterator, context):
+  def upload_chunk_stream(self, request_iterator, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def download(self, request, context):
+  def upload_single_chunk(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def download_chunk_stream(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -68,16 +85,28 @@ class FileServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def hash_id_exists_in_memory(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_FileServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'upload': grpc.stream_unary_rpc_method_handler(
-          servicer.upload,
+      'upload_chunk_stream': grpc.stream_unary_rpc_method_handler(
+          servicer.upload_chunk_stream,
           request_deserializer=chunk__pb2.Chunk.FromString,
           response_serializer=chunk__pb2.Reply.SerializeToString,
       ),
-      'download': grpc.unary_stream_rpc_method_handler(
-          servicer.download,
+      'upload_single_chunk': grpc.unary_unary_rpc_method_handler(
+          servicer.upload_single_chunk,
+          request_deserializer=chunk__pb2.Chunk.FromString,
+          response_serializer=chunk__pb2.Reply.SerializeToString,
+      ),
+      'download_chunk_stream': grpc.unary_stream_rpc_method_handler(
+          servicer.download_chunk_stream,
           request_deserializer=chunk__pb2.Request.FromString,
           response_serializer=chunk__pb2.Chunk.SerializeToString,
       ),
@@ -90,6 +119,11 @@ def add_FileServerServicer_to_server(servicer, server):
           servicer.get_stored_hashes_list_iterator,
           request_deserializer=chunk__pb2.Empty_request.FromString,
           response_serializer=chunk__pb2.Reply_string.SerializeToString,
+      ),
+      'hash_id_exists_in_memory': grpc.unary_unary_rpc_method_handler(
+          servicer.hash_id_exists_in_memory,
+          request_deserializer=chunk__pb2.Request.FromString,
+          response_serializer=chunk__pb2.Reply.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
