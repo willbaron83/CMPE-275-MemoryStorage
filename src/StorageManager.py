@@ -27,14 +27,19 @@ class StorageManagerClient:
             ('key-number-of-chunks', str(number_of_chunks))
         )
 
-        response = self.stub.upload_chunk_stream(stream_of_bytes_chunks, metadata=metadata)
+        try:
+            response = self.stub.upload_chunk_stream(stream_of_bytes_chunks, metadata=metadata)
 
-        if response.success:
-            print("Successfully saved the data with hash_id: ", hash_id)
-        else:
-            print("Failed saved the data with hash_id", hash_id)
+            if response.success:
+                print("Successfully saved the data with hash_id: ", hash_id)
+            else:
+                print("Failed saved the data with hash_id", hash_id)
 
-        return chunk_pb2.Reply(success=response.success)
+            return chunk_pb2.Reply(success=response.success)
+        except Exception as e:
+            print("response fails")
+            print(str(e))
+            print(metadata)
 
     def upload_single_chunk(self, hash_id, chunk_size, chunk_bytes):
 

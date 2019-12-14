@@ -40,6 +40,10 @@ class MemoryManager:
         print("[MemoryManager] Number of pages available in memory %s of size %s bytes." % (len(self.list_of_all_pages),
                                                                                            self.page_size))
 
+    def save_stream_data(self, data, index):
+        self.list_of_all_pages[index].put_data(data)
+        return
+
     # def put_data(self, memory_id, data_chunks, num_of_chunks):
     def put_data(self, data_chunks, hash_id, number_of_chunks, is_single_chunk):
         '''
@@ -64,19 +68,25 @@ class MemoryManager:
         #print("[MemoryManager] List of pages that it got = {}, Number of pages received = {}".format(len(target_list_indexes), len(target_list_indexes)))
         start_write_data = time.time()
 
+
+
         # save the data in pages
-        index_counter = 0
+        #index_counter = 0
         if not is_single_chunk:
-            for c in data_chunks:
-                self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
-                index_counter = index_counter + 1
+            temp_data = list(data_chunks)
+            temp = [self.save_stream_data(c, target_list_indexes[i]) for i, c in enumerate(temp_data)]
+            # index_counter = index_counter + 1
+            # for c in data_chunks:
+            #     self.list_of_all_pages[target_list_indexes[index_counter]].put_data(c)
+            #     index_counter = index_counter + 1
         else:
-            self.list_of_all_pages[target_list_indexes[index_counter]].put_data(data_chunks)
-            index_counter = index_counter + 1
+            # self.save_stream_data(data_chunks, target_list_indexes[0])
+            self.list_of_all_pages[target_list_indexes[0]].put_data(data_chunks)
+            #index_counter = index_counter + 1
 
         total_time_write_data = round(time.time() - start_write_data, 6)
 
-        assert index_counter == pages_needed  # make sure we use all the pages we needed
+        #assert index_counter == pages_needed  # make sure we use all the pages we needed
 
         # update the list with used pages
         self.list_of_pages_used.extend(target_list_indexes)
@@ -133,18 +143,12 @@ class MemoryManager:
 
     # this function is very slow, we need to improve it. (This will use a tree)
     def find_n_available_pages(self, n):
-        start = time.time()
+
 
         print("[MemoryManager] Looking for %s available pages... " % n)
         list_indexes_to_used = []
-
+        start = time.time()
         list_indexes_to_used = self.pages_free.get_available_space(n)
-        # for i in range(0, len(self.list_of_all_pages)):
-        #     if i not in self.list_of_pages_used:
-        #         list_indexes_to_used.append(i)
-        #         if len(list_indexes_to_used) == n:
-        #             break
-        #
         total_time = round(time.time() - start, 6)
 
         if len(list_indexes_to_used) != n:

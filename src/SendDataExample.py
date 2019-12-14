@@ -23,13 +23,14 @@ def get_file_chunks(filename, chunk_size):
 
 
 def save_chunks_to_file(filename, chunks):
-    with open(filename, 'wb') as f:
+    with open("../"+filename, 'wb') as f:
         for chunk in chunks:
             f.write(chunk.buffer)
 
 
+
 if __name__ == '__main__':
-    send_node = StorageManagerClient('localhost:5555')
+    send_node = StorageManagerClient('127.0.0.1:5555')
 
     if len(sys.argv) == 1:
         print("Please pass in at least one argument")
